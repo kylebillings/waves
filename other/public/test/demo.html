@@ -1,0 +1,151 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Waveform.JS</title>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+    <script src='http://connect.soundcloud.com/sdk.js'></script>
+    <script src='/waveform.js'></script>
+
+    <style>
+    * {
+  margin: 0;
+  padding: 0; }
+
+body {
+  color: #999999;
+  font: 13px Interstate Light; }
+
+.waveform {
+  width: 80%;
+  height: 150px;
+  margin: 100px auto;
+}
+
+</style>
+
+<script>
+
+$(".play").live("click", function(){
+  SC.initialize({
+    client_id: "YOUR_CLIENT_ID"
+  });
+
+
+  SC.get("/tracks/293", function(track){
+    $.getJSON("http://waveformjs.org/w?callback=?", {
+      url: track.waveform_url,
+    }, function(d){
+      var sound;
+      var waveform = new Waveform({
+        container: $(".w0").get(0),
+        innerColor: function(x){
+          if(sound && x < sound.position / sound.durationEstimate){
+            return "rgba(255,  102, 0, 0.8)";
+          }else if(sound && x < sound.bytesLoaded / sound.bytesTotal){
+            return "rgba(0, 0, 0, 0.8)";
+          }else{
+            return "rgba(0, 0, 0, 0.4)";
+          }
+        },
+        data: d
+      });
+
+      SC.stream(track.uri, {
+        whileloading: waveform.redraw,
+        whileplaying: waveform.redraw,
+        volume: 0,
+        autoPlay: true
+      }, function(s){
+        sound = s;
+      });
+    });
+  });
+
+  d = []
+  a = [0, 0.25, 0, 1, 0, 0.5, 0, 0.75]
+  for(var i=0; i < a.length; i++){
+    for(var ii=0; ii < 10; ii++){
+      d.push(a[i]);
+    }
+  }
+
+  return false;
+
+  w0 = new Waveform({
+    container: $(".w2")[0],
+    outerColor: "transparent",
+    innerColor: "#ff0066",
+    width: 8*10,
+    interpolate: false,
+    data: d
+  });
+
+
+  $.getJSON("http://waveformjs.org/w?callback=?", {
+    url: "http://w1.sndcdn.com/EQyi2vpPOMvG_m.png",
+  }, function(d){
+
+    w1 = new Waveform({
+      container: $(".w1")[0],
+      outerColor: "transparent",
+      innerColor: function(){
+        return '#'+Math.floor(Math.random()*16777215).toString(16);
+      },
+      data: d
+    });
+  });
+
+  w2 = new Waveform({
+    container: $(".w2")[0],
+    outerColor: "transparent",
+    innerColor: function(){
+      return '#'+Math.floor(Math.random()*16777215).toString(16);
+    },
+    data: [1, 0.5, 1, 0],
+  });
+
+  w3 = new Waveform({
+    container: $(".w3")[0],
+    outerColor: "transparent",
+    innerColor: function(x){
+      return '#'+Math.floor((0.2 + x)*16777215).toString(16);
+    }
+  });
+
+  w4 = new Waveform({
+    container: $(".w3")[0],
+    outerColor: "transparent",
+    innerColor: "black",
+    interpolate: false
+  });
+
+  d = []
+  setInterval(function(){
+    //d.push(Math.random());
+    //d.push( x= Math.sin(d.length));
+    d.push(x = (d.length % 36) / 36)
+    w3.update({
+      data: d
+    });
+
+    w4.update({
+      data: d
+    });
+
+  }, 50);
+
+});
+</script>
+
+  </head>
+  <body>
+    <button class="play">Play!</button>
+    <div class='waveform w0'></div>
+    <div class='waveform w1'></div>
+    <div class='waveform w2'></div>
+    <div class='waveform w3'></div>
+    <div class='waveform w4'></div>
+
+  </body>
+</html>
