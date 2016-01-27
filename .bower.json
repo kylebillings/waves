@@ -1,0 +1,15 @@
+{
+  "name": "waveform-generator",
+  "homepage": "https://github.com/enjikaka/WaveformGenerator.js",
+  "version": "0.0.1",
+  "_release": "0.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.1",
+    "commit": "f0de8c29f5cf7e9f84d69f02106174a209fe2309"
+  },
+  "_source": "git://github.com/enjikaka/WaveformGenerator.js.git",
+  "_target": "~0.0.1",
+  "_originalSource": "waveform-generator",
+  "_direct": true
+}
